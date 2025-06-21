@@ -1,0 +1,41 @@
+.attractionsPage {
+  background: linear-gradient(135deg, #f2f0ed 0%, #ffffff 100%);
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
+.hero {
+  padding: 50px 20px;
+  text-align: center;
+  background: var(--color-section-bg);
+}
+
+.trailWrapper {
+  height: 400px;
+  margin-top: 30px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.gridContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 0 1rem;
+  justify-items: center;
+  gap: 30px;
+}
+
+.loading,
+.empty,
+.error {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2rem;
+}
