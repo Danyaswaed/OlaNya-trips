@@ -3,9 +3,11 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const db = require("../../db");
 
+// מוגדר מסלול POST שמקבל אימייל וסיסמה חדשה.
 router.post("/resetPassword", async (req, res) => {
+  // קבל את האימייל וסיסמה החדשה מהנתונים של הטופס.
   const { email, newPassword } = req.body;
-
+  //אם אחד מהשדות חסר – מחזירים שגיאת לקוח
   if (!email || !newPassword) {
     return res.status(400).json({
       success: false,
@@ -13,14 +15,17 @@ router.post("/resetPassword", async (req, res) => {
     });
   }
 
+  //הצפנה ועדכון סיסמה
   try {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    const [result] = await db.query("UPDATE users SET password = ? WHERE email = ?", [
-      hashedPassword,
-      email,
-    ]);
+    //מבצעים שאילתת SQL לעדכון סיסמת המשתמש לפי המייל.
+    const [result] = await db.query(
+      "UPDATE users SET password = ? WHERE email = ?",
+      [hashedPassword, email]
+    );
 
+    //אם לא עודכן אף משתמש (כלומר, המייל לא נמצא) – מחזירים שגיאת 404
     if (result.affectedRows === 0) {
       return res.status(404).json({
         success: false,
@@ -42,3 +47,4 @@ router.post("/resetPassword", async (req, res) => {
 });
 
 module.exports = router;
+//מאפס את סיסמת המשתמש במסד הנתונים לאחר אימות מוצלח

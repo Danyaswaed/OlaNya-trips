@@ -43,7 +43,7 @@ router.post("/login", async (req, res) => {
       userName,
     ]);
     console.log("Found users:", users);
-
+// משתמש לא קיים מקבל שגיאה 
     if (!users || users.length === 0) {
       console.log("No user found with username:", userName);
       return res.status(401).json({
@@ -62,7 +62,7 @@ router.post("/login", async (req, res) => {
           console.error("Error comparing passwords:", err);
           reject(err);
         } else {
-          resolve(result);
+          resolve(result);//  return true/false
         }
       });
     });
@@ -77,10 +77,11 @@ router.post("/login", async (req, res) => {
       });
     }
 
+    //שמירת הסיסמה כך שלא יכניס את הסיסמה שוב
     // Create JWT payload
     const payload = {
       user: {
-        id: user.idNumber, // This should match what's used in your database
+        id: user.idNumber, 
         idNumber: user.idNumber,
         userName: user.userName,
         email: user.email,
@@ -117,7 +118,7 @@ router.post("/login", async (req, res) => {
             phone: user.phone,
             address: user.address,
             role: user.role,
-            profileImage: user.profilePicture || "", // ✅ השם שאת משתמשת בו בפרונט
+            profileImage: user.profilePicture || "", 
           },
         });
       }

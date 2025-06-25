@@ -18,6 +18,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // GET current user profile
+// verifyToken in /mid/auth.js
 router.get('/profile', verifyToken, async (req, res) => {
   try {
     const conn = db.getConnection();

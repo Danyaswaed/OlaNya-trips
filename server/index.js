@@ -1,3 +1,4 @@
+//Ola Khateeb & Danya Swaed
 // server/index.js
 const dotenv = require("dotenv").config();
 

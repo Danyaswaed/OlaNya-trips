@@ -30,6 +30,7 @@ const ContactUs = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  //שליחת הטופס
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);

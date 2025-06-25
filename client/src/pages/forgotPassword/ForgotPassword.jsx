@@ -3,22 +3,27 @@ import { useNavigate } from "react-router-dom";
 import { forgotPassword } from "../../services/api";
 import styles from "./ForgotPassword.module.css";
 
+// Define the ForgotPassword component
 export default function ForgotPassword() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);//הטופס 
   const [error, setError] = useState("");
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setError(""); // איפוס הודעת השגאיה
 
+    // בדיקת אם לא הוזנה כתובת מייל מציג שגיאה
     if (!email) {
       setError("Please enter your email address");
       return;
     }
 
     setIsSubmitting(true);
+
+    // שולח בקשה לשרת דרך הפונקציה forgotPassword
     try {
       // Send email string directly, not as an object
       const response = await forgotPassword(email);
@@ -66,6 +71,7 @@ export default function ForgotPassword() {
 
           {error && <div className={styles.errorMessage}>{error}</div>}
 
+          {/* כפתור לשליחת הטופס*/}
           <button
             type="submit"
             className={styles.submitButton}
