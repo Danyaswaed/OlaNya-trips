@@ -99,6 +99,7 @@ exports.uploadProfileImage = async (req, res) => {
 
     // Verify file exists on disk
     try {
+      //בודק אם קובץ קיים, ואם יש הרשאות אליו.
       await fs.promises.access(req.file.path, fs.constants.F_OK);
       console.log("File exists on disk:", req.file.path);
     } catch (err) {

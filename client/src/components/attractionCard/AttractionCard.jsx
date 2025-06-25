@@ -3,6 +3,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaMapMarkerAlt, FaRoute, FaClock } from "react-icons/fa";
 import styles from "./attractionCard.module.css";
+import { Link } from "react-router-dom";
 
 const AttractionCard = ({
   _id,
@@ -15,7 +16,7 @@ const AttractionCard = ({
   attraction_distance,
 }) => {
   const navigate = useNavigate();
-  
+
   const imageUrl =
     attraction_img ??
     "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f8f9fa'/%3E%3C/svg%3E";
@@ -42,10 +43,7 @@ const AttractionCard = ({
   };
 
   return (
-    <div
-      className={styles.card}
-      onClick={() => navigate(`/attractions/${_id}`)}
-    >
+    <div className={styles.card} onClick={() => navigate(`/attraction/${_id}`)}>
       <div className={styles.imageContainer}>
         <img
           src={imageUrl}
@@ -85,3 +83,14 @@ const AttractionCard = ({
 };
 
 export default AttractionCard;
+
+// Add a Link component around the card
+const AttractionCardWithLink = ({ ...props }) => {
+  return (
+    <Link to={`/attraction/${props._id}`}>
+      <AttractionCard {...props} />
+    </Link>
+  );
+};
+
+export { AttractionCardWithLink as AttractionCard };

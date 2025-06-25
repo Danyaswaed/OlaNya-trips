@@ -5,6 +5,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import classes from "./Auth.module.css";
 
+/**
+ * function for login and signup
+ * @returns
+ */
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -22,21 +26,28 @@ const Auth = () => {
   const [apiError, setApiError] = useState("");
   const navigate = useNavigate();
 
+  /**
+   *    function to handle form input changes
+   */
   const validateForm = () => {
     const newErrors = {};
 
     // Common validations for both login and register
+    // בדיקת אם הערך ריק אחרי הסרת רווחים
     if (!formData.userName.trim()) {
       newErrors.userName = "Username is required";
     }
 
+    // בדיקת אם המשתמש במצב הרשמה
     if (!isLogin) {
       if (!formData.email) {
         newErrors.email = "Email is required";
+        //בדיקת תקינות של כתובת מייל
       } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
         newErrors.email = "Email is invalid";
       }
 
+      //בדיקת אם המשתמש מלא את השדות האילו
       if (!formData.phone) {
         newErrors.phone = "Phone number is required";
       }
@@ -50,10 +61,18 @@ const Auth = () => {
       }
     }
 
+    // בדיקת אם המשתמש לא מזין את הסיסמא
+    // Password validation
     if (!formData.password) {
       newErrors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+    } else if (formData.password.length < 3 || formData.password.length > 8) {
+      newErrors.password = "Password must be between 3 and 8 characters";
+    } else if (!/^[a-zA-Z0-9]+$/.test(formData.password)) {
+      newErrors.password = "Password must contain only letters and numbers";
+    } else if (!/[A-Za-z]/.test(formData.password)) {
+      newErrors.password = "Password must include at least one letter";
+    } else if (!/[0-9]/.test(formData.password)) {
+      newErrors.password = "Password must include at least one number";
     }
 
     // Additional validations for registration
@@ -64,46 +83,55 @@ const Auth = () => {
         newErrors.email = "Email is invalid";
       }
 
+      //phone validation
       if (!formData.phone) {
         newErrors.phone = "Phone number is required";
       }
 
+      // Confirm password (only on register)
       if (formData.password !== formData.confirmPassword) {
         newErrors.confirmPassword = "Passwords do not match";
       }
 
+      // ID number validation
       if (!formData.idNumber) {
         newErrors.idNumber = "ID number is required";
       }
     }
-
+    //שגיאות שיבצעו למשתמש כדי לתקן
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
+  // function to handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
+      // עדכון הנתונים במשתמש
       ...prev,
       [name]: value,
     }));
   };
-
+  // function to validate form inputs
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); //מונע מהדפדפן לרענו את הדף כששולחים את הטופס
     setApiError("");
 
+    //validate form inputs
     if (!validateForm()) return;
 
     try {
       if (!isLogin) {
         // Handle registration
+        // Remove confirmPassword from userData before sending it to the API
         const { confirmPassword, ...userData } = formData;
+        //שולח את נתוני המשתמש לשרת דרך פונקציית ההרשמה שמבצעת קריאה ל API
         const response = await signup(userData);
 
         if (response.data.success) {
           // Show success message and switch to login
           setApiError("Registration successful! Please log in.");
+          // Reset form fields and switch to login page
           setIsLogin(true);
           setFormData((prev) => ({
             ...prev,
@@ -121,25 +149,26 @@ const Auth = () => {
         console.log("Login response:", response.data);
         if (response.data.token && response.data.user) {
           // Store the token
+          // שומר את הטוקן המקומית  כדי לזהות את המשתמש בבקשות עתידיות.
           localStorage.setItem("token", response.data.token);
 
           // Prepare user data for storage
           const userData = {
-            _id: response.data.user.idNumber, // Make sure this matches your backend
+            _id: response.data.user.idNumber,
             userName: response.data.user.userName,
             email: response.data.user.email,
             phone: response.data.user.phone,
             address: response.data.user.address,
             role: response.data.user.role,
             profileImage: response.data.user.profileImage || "",
-            // Add any other user fields you need
           };
 
           console.log("Storing user data:", userData);
+          // שמירת פרטי המשתמש
           localStorage.setItem("user", JSON.stringify(userData));
 
           // Refresh the page to ensure all components get the updated user data
-          window.location.href = "/profile";
+          window.location.href = "/home";
         } else {
           console.error("Missing token or user data in response");
           setApiError(
@@ -157,6 +186,7 @@ const Auth = () => {
     }
   };
 
+  //מחליפה בין התחברות להרשמה 
   const toggleMode = () => {
     setIsLogin(!isLogin);
     setErrors({});
@@ -165,11 +195,13 @@ const Auth = () => {
 
   return (
     <div className={classes.authContainer}>
+      {/*login or register */}
       <h2>{isLogin ? "Login" : "Register"}</h2>
       {apiError && <div className={classes.error}>{apiError}</div>}
 
       <form onSubmit={handleSubmit} className={classes.authForm}>
         <div className={classes.formGroup}>
+          {/* קליטת שם משתמש וסיסמה  */}
           <label htmlFor="userName">Username</label>
           <input
             type="text"
@@ -184,6 +216,7 @@ const Auth = () => {
           )}
         </div>
 
+          {/* אם המשתמש במצב ברשמה מציגים לו את שאר השדים שצריך לקלוט  */}
         {!isLogin && (
           <>
             <div className={classes.formGroup}>

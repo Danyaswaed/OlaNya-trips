@@ -1,30 +1,37 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  updateMyProfile,
-  updatePassword,
-  uploadProfileImage,
+  updateMyProfile, // עדכון פרטי המשתמש
+  updatePassword, // עדכון סיסמה
+  uploadProfileImage, // העלאת תמונת פרופיל
 } from "../../services/api";
 import styles from "./ProfilePage.module.css";
 
+//profilepage component
 const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const [user, setUser] = useState(null);
+
+  //טופס ערכת פרופיל
   const [formData, setFormData] = useState({
     userName: "",
     email: "",
     phone: "",
     address: "",
   });
+  //שינוי סיסמה
   const [passwords, setPasswords] = useState({
     oldPassword: "",
     newPassword: "",
   });
+  //הסתרת סיסמה בטופס
   const [showPasswords, setShowPasswords] = useState({
     oldPassword: false,
     newPassword: false,
   });
+  //אחסון קובץ תמונה שנבחר
   const [file, setFile] = useState(null);
+  // הודעת הצחה /שגיאה
   const [message, setMessage] = useState({ text: "", type: "" });
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -44,6 +51,7 @@ const ProfilePage = () => {
 
   // טען נתוני משתמש מ־localStorage
   useEffect(() => {
+    //פונקציה פנימית שמבצעת את כל השליפה והבדיקה של המשתמש.
     const loadUserData = () => {
       try {
         const storedUser = localStorage.getItem("user");
@@ -66,6 +74,7 @@ const ProfilePage = () => {
           console.log("Setting user data:", userData);
           setUser(userData);
 
+          //טוענים את השדות לטופס עריכת פרופיל
           setFormData({
             userName: userData.userName || "",
             email: userData.email || "",
@@ -91,6 +100,7 @@ const ProfilePage = () => {
     loadUserData();
   }, [navigate]);
 
+  //logout function
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");

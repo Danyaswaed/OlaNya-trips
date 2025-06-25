@@ -1,3 +1,4 @@
+// src/pages/verifyAndReset/VerifyAndReset.jsx
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -15,7 +16,6 @@ export default function VerifyAndReset() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
   const navigate = useNavigate();
 
   const handleVerifyCode = async (e) => {
@@ -29,18 +29,16 @@ export default function VerifyAndReset() {
     }
 
     setIsSubmitting(true);
-
     try {
       const res = await verifyCode({ email, code });
       if (res.data.success) {
         setVerified(true);
-        setMessage("The code has been verified, you can now enter a new password✅ .");
+        setMessage("Code verified! You can now reset your password.");
       } else {
-        setError(res.data.message || "Incorrect code❌");
+        setError(res.data.message || "Incorrect code.");
       }
     } catch (err) {
-      setError("Authentication failed, please try again.");
-      console.error("Verification error:", err);
+      setError("Verification failed. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -52,33 +50,31 @@ export default function VerifyAndReset() {
     setMessage("");
 
     if (!password || !confirmPassword) {
-      setError("Please enter and verify the new password");
+      setError("Please enter and confirm your new password.");
       return;
     }
 
     if (password !== confirmPassword) {
-      setError("Password does not match❌.");
+      setError("Passwords do not match.");
       return;
     }
 
-    if (password.length < 6) {
-      setError("Password must contain at least 6 characters");
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters.");
       return;
     }
 
     setIsSubmitting(true);
-
     try {
       const res = await resetPassword({ email, newPassword: password });
       if (res.data.success) {
-        setMessage(res.data.message || "Password successfully reset!✅");
+        setMessage("Password reset successfully!");
         setTimeout(() => navigate("/login"), 3000);
       } else {
-        setError(res.data.message || " Reset failed❌");
+        setError(res.data.message || "Password reset failed.");
       }
     } catch (err) {
       setError("Error resetting password.");
-      console.error("Password reset error:", err);
     } finally {
       setIsSubmitting(false);
     }
@@ -86,7 +82,7 @@ export default function VerifyAndReset() {
 
   return (
     <div className={styles.container}>
-      <h2>אימות ואיפוס סיסמה</h2>
+      <h2>Password verification and reset</h2>
       {message && <p className={styles.success}>{message}</p>}
       {error && <p className={styles.error}>{error}</p>}
 
@@ -109,10 +105,11 @@ export default function VerifyAndReset() {
             disabled={isSubmitting}
           />
           <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Verifying..." : "Verify Code"}
+            {isSubmitting ? "Verifying..." : "Verify Code"}
           </button>
-          <Link to="/forgotPassword" className={styles.link}>
-          Didn't receive a code? Request again          </Link>
+          <Link to="/forgot-password" className={styles.link}>
+            Didn't receive a code? Request again
+          </Link>
         </form>
       ) : (
         <form onSubmit={handleResetPassword} className={styles.form}>
@@ -123,10 +120,10 @@ export default function VerifyAndReset() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              minLength="6"
+              minLength="8"
               className={styles.passwordInput}
             />
-            <span 
+            <span
               className={styles.passwordToggle}
               onClick={() => setShowPassword(!showPassword)}
             >
@@ -140,10 +137,10 @@ export default function VerifyAndReset() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
-              minLength="6"
+              minLength="8"
               className={styles.passwordInput}
             />
-            <span 
+            <span
               className={styles.passwordToggle}
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
             >
@@ -151,7 +148,7 @@ export default function VerifyAndReset() {
             </span>
           </div>
           <button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Reset password..." : "Password reset"}
+            {isSubmitting ? "Resetting..." : "Reset Password"}
           </button>
         </form>
       )}

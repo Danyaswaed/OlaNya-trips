@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaMapMarkerAlt, FaRoute, FaClock } from "react-icons/fa";
 import styles from "./campingCard.module.css";
+import { Link } from "react-router-dom";
 
 const CampingCard = ({
   id,
@@ -26,7 +27,8 @@ const CampingCard = ({
   };
 
   // Placeholder image URL
-  const placeholderImage = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f8f9fa'/%3E%3C/svg%3E";
+  const placeholderImage =
+    "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f8f9fa'/%3E%3C/svg%3E";
 
   const formatDuration = (minutes) => {
     if (!minutes) return "N/A";
@@ -44,7 +46,10 @@ const CampingCard = ({
   };
 
   return (
-    <div className={styles.card} onClick={() => navigate(`/camping/${id}`)}>
+    <div
+      className={styles.card}
+      onClick={() => navigate(`/camping-detail/${id}`)}
+    >
       <div className={styles.imageContainer}>
         <img
           src={imageUrl}
@@ -84,3 +89,14 @@ const CampingCard = ({
 };
 
 export default CampingCard;
+
+// Add a Link component around the card
+const CampingCardWithLink = ({ ...props }) => {
+  return (
+    <Link to={`/camping-detail/${props.id}`}>
+      <CampingCard {...props} />
+    </Link>
+  );
+};
+
+export { CampingCardWithLink as CampingCard };

@@ -11,10 +11,12 @@ const nodemailer = require('nodemailer');
 // Create transporter using Gmail service
 const transporter = nodemailer.createTransport(
   {
-    service: 'gmail',
+    service: "gmail",
     auth: {
       user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS.replace(/\s/g, ''),
+      pass: process.env.EMAIL_PASS
+        //מסיר רווחים מהסיסמה בטעות
+        .replace(/\s/g, ""),
     },
   },
   {
@@ -34,6 +36,7 @@ transporter.verify()
  * @param {string} fromEmail - The user’s email address
  * @param {string} message  - The message content
  */
+//משתמשים בה ב contactus.js
 async function sendContactMessage(name, fromEmail, message) {
   // Mail options
   const mailOptions = {

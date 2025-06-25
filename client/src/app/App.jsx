@@ -14,6 +14,7 @@ import Camping from "../pages/camping/Camping";
 import ProfilePage from "../pages/profile/ProfilePage";
 import Attractions from "../pages/attraction/Attraction";
 import Home from "../pages/home/Home";
+import Trips from "../pages/trips/Trips";
 
 // Simple home component for after login
 // function Home() {
@@ -35,12 +36,15 @@ export default function App() {
           <Route path="/login" element={<Auth isLogin={true} />} />
           <Route path="/register" element={<Auth isLogin={false} />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          console.log("🚨 typeof VerifyAndReset:", typeof VerifyAndReset);
+          console.log("🚨 value of VerifyAndReset:", VerifyAndReset);
           <Route path="/verify" element={<VerifyAndReset />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/home" element={<Home />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/camping" element={<Camping />} />
           <Route path="/attractions" element={<Attractions />} />
+          <Route path="/trips" element={<Trips />} />
           {/* Fallback route */}
           <Route path="*" element={<Navigate to="/home" />} />
         </Routes>
